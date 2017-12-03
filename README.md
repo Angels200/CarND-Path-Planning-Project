@@ -19,7 +19,8 @@ The Analysis of the project's given data leads to different logical components :
 7. Main : Responsible of handling requests of way points from the simulator, calculates the ego vehicle environment, the ego vehicle trajectory by minimizing the jerk and sends back the converted the trajectory in cartesian coordinates to the simulator 
 
 ## Logical Architecture Description
-### Vehicle : Each vehicle encapsulates some attributes and methods to manage its own information provided by the simulator
+### Vehicle : 
+Each vehicle encapsulates some attributes and methods to manage its own information provided by the simulator
 #### Attributes :
 1. Identifier : makes the vehicle unique among the set of vehicles on the scene. This attributes is assigned automatically except for the ego vehicle which assigned manualy (id = 1000)
 2. Left Gap, Right Gap and Current Gap : These attributes are of Gap type that memorizes the front and back gap from the ego vehicle to front and back (left, right, current lane's vehicle) vehicles. it is used for gap calculation by the Planner to make decision on lane change
