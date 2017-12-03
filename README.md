@@ -19,7 +19,7 @@ The Analysis of the project's given data leads to different logical components :
 7. Main : Responsible of handling requests of way points from the simulator, calculates the ego vehicle environment, the ego vehicle trajectory by minimizing the jerk and sends back the converted the trajectory in cartesian coordinates to the simulator 
 
 ## Logical Architecture Description
-### Vehicle : 
+### Vehicle Logical Component: 
 Each vehicle encapsulates some attributes and methods to manage its own information provided by the simulator
 #### Attributes :
 1. Identifier : makes the vehicle unique among the set of vehicles on the scene. This attributes is assigned automatically except for the ego vehicle which assigned manualy (id = 1000)
@@ -28,4 +28,30 @@ Each vehicle encapsulates some attributes and methods to manage its own informat
 4. Lane : it represents the current lane. The lane attributes pointes to the logical component : lane and therefore can exploit its contained information
 
 #### Methods : 
-1. Update : 
+1. Update : The update method save the start state and the current lane position and its neighbour lanes
+2. update_environment : This method takes the neighbor vehicles built set using sensor fusion data provided by the simulator and determines the closest neighbors front, back vehicles'  on the current lane and the neighbor lanes left, right. It compputes then the gap to the ego vehicle from each determined closest neighbor vehicle.
+3. compute_gap : This method is used to compute the gap between the ego vehicle and one of the closest neighbor vehicle
+4. print : This method is used to print out the different characteristic of the vehicle for debbuging purpose
+
+### Lane Logical Component: 
+The lane component is pointed by the vehicle component and stores by delegation the ego vehicle lane position and neighbour lanes
+#### Attributes :
+1. type,left_type,right_type : The type attributes stores the type of the current lane, the left_type stores the type of the left lane and the right_type stores the type of the right lane. Knowing that these attributes are of user defined type : LaneType  
+
+#### Methods : 
+1. target_lane : This method takes a lane position d in frenet coordinates and computes the target lane that will be the current lane lane and the right and left the lanes.
+ex : if d = 2  ==> the target lane will be of TypeLane::Left, its left lane will be TypeLane::None and the right lane will be of type LaneType::MID (middle)
+
+This method is invoked by the vehicle component
+
+### Behavior Planner Logical Component: 
+The Behavior Planner component is called by the main component make decision on lane change
+#### Attributes :
+1. type : The type attributes stores the type of the B Planner,this attributes is of type BehaviorType::KEEPLANE, TURNLEFT, TURNRIGHT
+2. cost : The cost attribute stores the commputed cost related to each gap (front, back) and for each lane (current, left, right)
+
+#### Methods : 
+1. compute_cost : This method computes the cost relatated to the lane. The cost has a value between [0,1] following the sigmoid function.
+
+
+
