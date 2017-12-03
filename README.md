@@ -9,7 +9,7 @@ The purpose of the Path Planning Project is to solve the problem of self-driving
 4. Transforming the generated trajectory from Frenets coordinates to cartensian ones
 
 ## Analysis and Design
-The Analysis of the project's given data leads to different logical components :
+During the desing phase, i apply some principles seen during the courses like classes (safety, feasability, comfort, ...). The Analysis of the project's given data leads to different logical components :
 1. Vehicle : Responsible of keeping track of its current lane, its state, neighbor vehicles, front and back gap
 2. Lane : Reponsible of providing information on the current lane like distance and neighboor lanes
 3. Behavior Planner : Responsible of computing gap, cost for the ego vehicle and finaly decide of the lane changing
@@ -51,7 +51,9 @@ The Behavior Planner component is called by the main component make decision on 
 2. cost : The cost attribute stores the commputed cost related to each gap (front, back) and for each lane (current, left, right)
 
 #### Methods : 
-1. compute_cost : This method computes the cost relatated to the lane. The cost has a value between [0,1] following the sigmoid function.
+1. compute_cost : This method computes the lane related cost which resulting value is between [0,1] according to the sigmoid function. The algorithm apply a penalty coefficient to the left and right costs during the calculation to disadvantage this behavior and a reward coefficient to the keeping lane cost (cuurrent) to advantage this behavior for more safety
+
+
 
 
 
