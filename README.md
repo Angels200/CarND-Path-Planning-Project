@@ -22,8 +22,8 @@ During the desing phase, i apply some principles seen during the courses like cl
 ### Vehicle Logical Component: 
 Each vehicle encapsulates some attributes and methods to manage its own information provided by the simulator
 #### Attributes :
-1. Identifier : makes the vehicle unique among the set of vehicles on the scene. This attributes is assigned automatically except for the ego vehicle which assigned manualy (id = 1000)
-2. Left Gap, Right Gap and Current Gap : These attributes are of Gap type that memorizes the front and back gap from the ego vehicle to front and back (left, right, current lane's vehicle) vehicles. it is used for gap calculation by the Planner to make decision on lane change
+1. Identifier : makes the vehicle unique among the set of vehicles on the scene. This attributes is assigned automatically except for the ego vehicle which is assigned manualy (id = 1000)
+2. Left Gap, Right Gap and Current Gap : These attributes are of type "Gap". The Gap type component memorizes the distances from the ego vehicle to the one infront of it and to the one inback of it for each of the left, right and current lane of the egovehicle. it is used for gap calculation by the Planner to make decision on lane change
 3. S and D states : These attributes keep track of the s state(p=s,v=speed, a=0n-- we consider the velocity is constant) and the d state (p=d,v=0,a=0). The s and d states are used in the trajectory calculation
 4. Lane : it represents the current lane. The lane attributes pointes to the logical component : lane and therefore can exploit its contained information
 
