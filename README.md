@@ -54,13 +54,30 @@ The Behavior Planner component is called by the main component make decision on 
 1. compute_cost : This method computes the lane related cost which resulting value is between [0,1] according to the sigmoid function. The algorithm apply a penalty coefficient to the left and right costs during the calculation to disadvantage this behavior and a reward coefficient to the keeping lane cost (cuurrent) to advantage this behavior for more safety
 
 ### Trajectory Logical Component: 
-The Behavior Planner component is called by the main component make decision on lane change
+The Trajectory component is called by the main component make decision on lane change
 #### Attributes :
 1. jmtpair : it stores the s state related jerk minimum component and d state one
 
 #### Methods : 
-1. update : This method computes the  target velocity according to the legal class and safety class (see the code for more detail about the algorithm). It computes also the target s state as part of the data preparation process to finaly generates two  JMT component s JMT and d JMT. Both of the of will be stored in the jmtpair attribute for later invocation by the main component.
+1. update : This method computes the  target velocity according to the legal class and safety class (see the code for more detail about the algorithm). It computes also the target s state as part of the data preparation process to finaly generates two  JMT component s JMT and d JMT. Both of them will be stored in the jmtpair attribute for later invocation by the main component.
 
+### JMT Logical Component: 
+The JMT stands for Jerk minimum trajectory component. In my design it is called by the Trajectory component minimize the jerk on trajectory defined by the start state and the target state. This object represents a quintic polynomial function of a number which has six coefficients. Once instantiated, you can evaluate this polynomial by giving a value. Jerk is the instantaneous change in acceleration over time like acceleration is the instantaneous change in speed over time. Riding with jerks is really uncomfortable. Applying the confort class to acceleration is minimizing the jerk.
+
+#### Attributes :
+1. jmtpair : it stores the s state related jerk minimum component and d state one
+
+#### Methods : 
+1. JMT (Constructor) : This method implements formula (seen in course) to get the polynomial path position function that minimizes the squared jerk to get from the start state to the target state given the duration. 
+
+### PathTransform Logical Component: 
+This commponent has a representation of the global map of the highway. It takes two `JMT` components which represents the desired path. This is something the controller does not understand in oposite to discrete points along the map in cartesian coordinates.
+
+#### Attributes :
+1. jmtpair : it stores the s state related jerk minimum component and d state one
+
+#### Methods : 
+1. compute : This method transform both of longitidinal and lateral paths in frenet coordinates into discrete points when we give it the distance between points along the path and number of points.
 
 
 
