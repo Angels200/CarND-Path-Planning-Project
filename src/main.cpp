@@ -1,3 +1,4 @@
+//some design of code are inspired from https://github.com/mithi/highway-path-planning/blob/master/src/main.cpp
 #include <fstream>
 #include <math.h>
 #include <uWS/uWS.h>
