@@ -74,10 +74,12 @@ The JMT stands for Jerk minimum trajectory component. In my design it is called 
 This commponent has a representation of the global map of the highway. It takes two `JMT` components which represents the desired path. This is something the controller does not understand in oposite to discrete points along the map in cartesian coordinates.
 
 #### Attributes :
-1. jmtpair : it stores the s state related jerk minimum component and d state one
+N/A
 
 #### Methods : 
 1. compute : This method transform both of longitidinal and lateral paths in frenet coordinates into discrete points when we give it the distance between points along the path and number of points.
+
+2. frenetToxy : This method is called by the compute method to convert the JMT paths (longitudinal and lateral) in frenet coordinates to paths in cartesian coordinates. To do that, it uses the spline component to fil the cubic polynomial and calculate the discrete points.
 
 
 
