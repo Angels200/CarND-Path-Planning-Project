@@ -36,42 +36,6 @@ void BehaviorPlanner::update(const Vehicle& vehicle){
 		  this->type = BehaviorType::TURNRIGHT;
 	  }
 
-	  /*
-	  switch(vehicle.current_lane.type){
-	  case LaneType::RIGHT:
-		  if(this->cost.current > this->cost.left){
-			  this->type = BehaviorType::TURNLEFT;
-		  }
-		  break;
-	  case LaneType::MID:
-		  if(this->cost.current > this->cost.right && this->cost.current > this->cost.left &&
-				  this->cost.right >= this->cost.left){
-			  this->type = BehaviorType::TURNLEFT;
-		  }
-		  else if(this->cost.current > this->cost.right && this->cost.current > this->cost.left &&
-				  this->cost.left >= this->cost.right){
-			  this->type = BehaviorType::TURNRIGHT;
-		  }
-		  break;
-	  case LaneType::LEFT:
-		  if(this->cost.current > this->cost.right){
-		  			  this->type = BehaviorType::TURNRIGHT;
-		  }
-		  break;
-	  }*/
-
-	  /*if(this->cost.left < this->cost.current && this->cost.left < this->cost.right
-			  	  	  && vehicle.current_lane.left_type != LaneType::NONE){
-		  this->type = BehaviorType::TURNLEFT;
-	  }
-	  else if(this->cost.right < this->cost.current && this->cost.right < this->cost.left
-			  	  	  && vehicle.current_lane.right_type != LaneType::NONE){
-	  		  this->type = BehaviorType::TURNRIGHT;
-	  }
-	  else if(this->cost.current < this->cost.left && this->cost.current < this->cost.right){
-	  		  this->type = BehaviorType::KEEPLANE;
-	  }*/
-
 	  this->print();
 
 }

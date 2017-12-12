@@ -24,7 +24,7 @@ void Trajectory::update(Vehicle& egocar, const BehaviorType behavior){
 		tools.log_number(egocar.current_gap.front, "egocar.current_gap.front: ");
 		tools.log("Reduce Speed");
 	}
-	else{//(behavior==BehaviorType::KEEPLANE && egocar.current_gap.front >= SAFETY_FRONT_GAP_BUFFER){
+	else{
 		target_v = LEGAL_SPEED_LIMIT ; //(egocar.fv_sstate.v);
 		tools.log("LEGAL_SPEED_LIMIT");
 	}

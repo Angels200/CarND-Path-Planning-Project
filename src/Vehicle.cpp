@@ -85,52 +85,13 @@ void Vehicle::update_environment(const std::vector<Vehicle>& otherVehicles){
 		}
 	}
 }
-/*
-void Vehicle::update_environment(const std::vector<Vehicle>& otherVehicles){
 
-	for(const Vehicle& otherVehicle: otherVehicles){
-		double fgap = 0.0;
-		fgap = Vehicle::compute_gap(otherVehicle,VEHICLE_FROM_FRONT);
-		double bgap = 0.0;
-		bgap = Vehicle::compute_gap(otherVehicle,VEHICLE_FROM_BACK);
-
-		//OtherVehicle and egocar are on the same lane
-		if(otherVehicle.current_lane.type==this->current_lane.type){
-			if(fgap < this->current_gap.front){
-				this->current_gap.front=fgap;
-				this->fv_sstate = otherVehicle.sstate;
-			}
-			if(bgap < this->current_gap.back){
-				this->current_gap.back = bgap;
-			}
-		}
-		else if(otherVehicle.current_lane.type==this->current_lane.left_type){   //otherVehicle is on the left of the egocar
-			if(fgap < this->left_gap.front){
-				this->left_gap.front=fgap;
-			}
-			if(bgap < this->left_gap.back){
-				this->left_gap.back = bgap;
-			}
-		}else if(otherVehicle.current_lane.type==this->current_lane.right_type){ //otherVehicle is on the right of the egocar
-			if(fgap < this->right_gap.front){
-				this->right_gap.front=fgap;
-			}
-			if(bgap < this->right_gap.back){
-				this->right_gap.back = bgap;
-			}
-		}
-	}
-}
-*/
 
 double Vehicle::compute_gap(const Vehicle& otherVehicle, const double direction){
 	double gap = 0.0;
 	gap = (otherVehicle.sstate.p - this->sstate.p); //* direction;
 	return gap;
-	/*if (gap > 0.0 && gap < INFINITE) {
-		  return gap;
-	}
-	return INFINITE;*/
+
 }
 
 void Vehicle::print(){
