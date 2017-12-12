@@ -171,8 +171,8 @@ SimPoints startcar(Vehicle& car, PathTransform& pathTransform){
 
   const int n = 225;
   const double t = n * DELTA_T;
-  const double target_speed = 2.0;
-  const double target_s = car.sstate.p + 40.0;
+  const double target_speed = 10.0;
+  const double target_s = car.sstate.p + 80.0;
 
   const State s_sstate = {car.sstate.p, car.sstate.v, 0.0};
   const State s_dstate = {car.dstate.p, 0.0, 0.0};
@@ -196,11 +196,9 @@ int main() {
     PathTransform pathTransform = PathTransform("../data/highway_map.csv", HIGHAWAY_TRACK_DISTANCE);
     tools.log("Map loaded...");
 
-    tools.log("Egocar creation...");
-	Vehicle egocar(1000);
-	egocar.print();
 
-    h.onMessage([&pathTransform,&tools,&start,&egocar](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
+
+    h.onMessage([&pathTransform,&tools,&start](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
     // The 2 signifies a websocket event
@@ -244,6 +242,10 @@ int main() {
           	tools.log("Sensor fusion recovering...");
           	auto sensor_fusion = j[1]["sensor_fusion"];
 
+          	tools.log("Egocar creation...");
+			Vehicle egocar(1000);
+			egocar.print();
+
           	//Update car object's s,d state components and lane object propreties (current lane, left lane, right lane)
           	tools.log("Egocar update states...");
           	egocar.update(sstate,dstate);
@@ -260,7 +262,9 @@ int main() {
             tools.log_bool(start);
             tools.log_number(n,"Previous_paht");
 
-          	if (!start) {
+
+
+            if (!start) {
 
 					//Our car hasn't moved yet. Let's move it!
 					tools.log("Starting engine...");
@@ -268,10 +272,9 @@ int main() {
 					start = true;
 					tools.log("Engine started...");
 
-          	} else if (n < CTRL_REMAINING_PATH_SIZE || egocar.check_speed()) {
+          	} else if (n < CTRL_REMAINING_PATH_SIZE){ // || egocar.check_speed()) {
 
-					// Our previous plan is about to run out, so append to it
-					// Make a list of all relevant information about other cars
+          		// Our previous plan is about to run out, so append to it
 					tools.log("Neighbors cars construction...");
 					vector<Vehicle> otherCars;
 
@@ -289,9 +292,8 @@ int main() {
 
 						  car.update(sstate,dstate);
 						  otherCars.push_back(car);
+						  car.print();
 					}
-
-
 					// Decide whether to turn left, turn right or keeplane based on data at hand
 					// NOTE: BehaviorPlanner updates our car's current leading/front vehicle's speed and gap
 					tools.log("Egocar environment update...");

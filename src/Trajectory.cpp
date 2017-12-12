@@ -17,17 +17,28 @@ void Trajectory::update(Vehicle& egocar, const BehaviorType behavior){
 
 	// If the car in front is going fast or we are very far from it anyway, go as fast as we can
 	// Else let's go a notch slower than the car in front
-
-	bool safe = (egocar.fv_sstate.v >= LEGAL_SPEED_LIMIT) || (egocar.current_gap.front >= SAFETY_FRONT_GAP_BUFFER);
-	target_v =  safe ? LEGAL_SPEED_LIMIT : (egocar.fv_sstate.v - SAFETY_SPEED_BUFFER);
-	// But if the car in front is too slow, let's go a little faster
-	target_v = target_v > SAFETY_MIN_SPEED ? target_v : SAFETY_MIN_SPEED;
-
+	double fgap = egocar.sstate.p - egocar.fv_sstate.p;
+	if(egocar.current_gap.front <= SAFETY_FRONT_GAP_BUFFER){
+		target_v = (egocar.fv_sstate.v- SAFETY_SPEED_BUFFER);
+		tools.log_number(fgap, "Front Gap: ");
+		tools.log_number(egocar.current_gap.front, "egocar.current_gap.front: ");
+		tools.log("Reduce Speed");
+	}
+	else{//(behavior==BehaviorType::KEEPLANE && egocar.current_gap.front >= SAFETY_FRONT_GAP_BUFFER){
+		target_v = LEGAL_SPEED_LIMIT ; //(egocar.fv_sstate.v);
+		tools.log("LEGAL_SPEED_LIMIT");
+	}
+	/*else{
+		bool safe = (egocar.fv_sstate.v >= LEGAL_SPEED_LIMIT) || (egocar.current_gap.front >= SAFETY_FRONT_GAP_BUFFER);
+		target_v =  safe ? LEGAL_SPEED_LIMIT : (egocar.fv_sstate.v - SAFETY_SPEED_BUFFER);
+		// But if the car in front is too slow, let's go a little faster
+		target_v = target_v > SAFETY_MIN_SPEED ? target_v : SAFETY_MIN_SPEED;
+	}*/
 	// Estimate a safe target distance based on our selected speed
-	target_s =  egocar.sstate.p + HORIZON * 0.5 * (egocar.sstate.v + target_v);
+	target_s =  egocar.sstate.p + HORIZON * 0.5 * (egocar.sstate.v + target_v); // HORIZON * 0.5 * (egocar.sstate.v + target_v);
 
 	// target position and velocity a
-	this->tsstate = {target_s, target_v * 1.2, 0.0};
+	this->tsstate = {target_s, target_v, 0.0};
 
 	// get target d component state based on behavior
 	// target speed and acceleration sideways of the road are both zero
