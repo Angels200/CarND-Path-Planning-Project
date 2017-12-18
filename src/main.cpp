@@ -21,7 +21,7 @@ using namespace std;
 
 // for convenience
 using json = nlohmann::json;
-bool start = false;
+
 // For converting back and forth between radians and degrees.
 constexpr double pi() { return M_PI; }
 double deg2rad(double x) { return x * pi() / 180; }
@@ -190,6 +190,7 @@ SimPoints startcar(Vehicle& car, PathTransform& pathTransform){
 
 int main() {
 	uWS::Hub h;
+	bool start = false;
 	Tools tools = Tools();
 	//cout << "Loading map..." << endl;
 	tools.log("Loading map...");

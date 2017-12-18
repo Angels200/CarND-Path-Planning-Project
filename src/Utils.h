@@ -41,7 +41,7 @@ const double LEGAL_SPEED_LIMIT = 20.75;
 const double SAFETY_MIN_SPEED = 18; //15.0;
 
 // if the gap is less than this we consider it unsafe to turn
-const double SAFETY_FRONT_GAP_THRESH = 10.0;
+const double SAFETY_FRONT_GAP_THRESH = 12.0;
 const double SAFETY_BACK_GAP_THRESH = 5.0;
 
 // This is the buffers we want against the leading front vehicle
