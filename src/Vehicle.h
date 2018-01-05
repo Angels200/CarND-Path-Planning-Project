@@ -1,40 +1,32 @@
 /*
  * Vehicle.h
  *
- *  Created on: Nov 5, 2017
+ *  Created on: Jan 2, 2018
  *      Author: naaman
  */
-
-//#include "Utils.h"
-#include "Lane.h"
+#include <vector>
+#include "Utils.h"
+using namespace std;
 
 #ifndef VEHICLE_H_
 #define VEHICLE_H_
 
-using namespace std;
-
 class Vehicle {
 public:
+	bool close = false;
+	Tools tools;
+	std::vector<double> front_gap; //vector containing the distance between the ego car and the nearest vehicle ahead for each lane
+	std::vector<double> back_gap; //vector containing the distance between the ego car and the nearest vehicle behind for each lane
+	std::vector<double> front_speed; //speed of the cars ahead of us
+	State sstate, dstate;
+	int lane;
+	Vehicle(int lane);
+	void update(const double& s, const double& d, const double& speed);
+	void set_lane(const double& d);
+	void update_environment(const Vehicle& otherVehicle);
 
-	int identifier;
-	//double s, d,v,front_gap,front_v,front_s;
-	bool initialized = false;
-	Tools tools = Tools();
-	State sstate,dstate,fv_sstate;
-	Gap current_gap,right_gap,left_gap; //Current gap, Right gap, left gap
-	Lane current_lane=Lane();//, right_lane=Lane(8.0),left_lane=Lane(2.0);
-	//Lane current_lane=Lane(); //, right_lane=Lane(),left_lane=Lane();
-
-	Vehicle(const int identifier);
 	virtual ~Vehicle();
-
-	void print();
-	void update(const State& sstate, const State& dstate);
-	void update_environment(const std::vector<Vehicle>& otherVehicles);
-	bool check_speed();
-private:
-
-	double compute_gap(const Vehicle& otherVehicle, const double direction);
 };
+
 
 #endif /* VEHICLE_H_ */

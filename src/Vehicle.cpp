@@ -1,119 +1,84 @@
 /*
  * Vehicle.cpp
  *
- *  Created on: Nov 5, 2017
+ *  Created on: Jan 2, 2018
  *      Author: naaman
  */
 
 #include "Vehicle.h"
 
-Vehicle::Vehicle(const int identifier){
-	this->identifier = identifier;
-	this->current_gap.front = INFINITE;
-	this->current_gap.back = INFINITE;
-	this->left_gap.front = INFINITE;
-	this->left_gap.back = INFINITE;
-	this->right_gap.front = INFINITE;
-	this->right_gap.back = INFINITE;
+Vehicle::Vehicle(int lane) {
+	// TODO Auto-generated constructor stub
+	this->lane = lane;
+	tools.log("Initializating Vehicle...");
+	for (int i = 0; i < 3; i++)
+	{
+		this->front_gap.push_back(99999999.00);
+		this->back_gap.push_back(99999999.00);
+		this->front_speed.push_back(99999999.00);
+		tools.log_number(this->front_gap[i], "this->front_gap[i]: ");
+	}
+
 }
 
-void Vehicle::update(const State& sstate, const State& dstate){
-	this->sstate = sstate;
-	this->dstate = dstate;
-	/*if(!initialized){
-		this->current_lane = Lane(this->dstate.p);
-		initialized = true;
+void Vehicle::update(const double& s, const double& d, const double& speed){
+	tools.log("Updating Vehicle...");
+
+	this->sstate.p = s;
+	this->sstate.v = speed;
+	this->sstate.a = 0.0;
+
+	this->dstate.p = d;
+	this->dstate.v = 0.0;
+	this->dstate.a = 0.0;
+	tools.log_number(this->dstate.p, "d: ");
+}
+
+void Vehicle::set_lane(const double& d){
+	tools.log("Setting  Vehicle lane...");
+	if (d < 4.0 && d > 0.0){
+		tools.log("d < 4.0 && d > 0.0");
+		this->lane = 0;
+	}
+	else if (d < 8.0 && d >= 4.0){
+		tools.log("d < 8.0 && d >= 4.0");
+		this->lane = 1;
 	}
 	else{
-		this->current_lane.set(dstate.p);
-	}*/
-	this->current_lane.set(dstate.p);
-	
-	//tools.log_number(this->identifier,"Car#:");
-
-
-}
-
-bool Vehicle::check_speed(){
-	if(this->current_gap.front < SAFETY_FRONT_GAP_THRESH){
-		//this->sstate.v -= this->sstate.v * 0.2;
-		return true;
+		tools.log(">= 8.0");
+		this->lane = 2;
 	}
-	return false;
 }
 
-void Vehicle::update_environment(const std::vector<Vehicle>& otherVehicles){
 
-	for(const Vehicle& otherVehicle: otherVehicles){
-		double gap = 0.0;
-		gap = Vehicle::compute_gap(otherVehicle,VEHICLE_FROM_FRONT);
-		bool front = false;
-		if(gap >= 0.0){
-			front=true;
-		}
-		else{
-			gap *= -1.0;
-		}
+//This method is used only by the egocar : This - otherVehicle : neighbor car provided by the sensor fusion data
+void Vehicle::update_environment(const Vehicle& otherVehicle){
+	tools.log("Updating Environment...");
 
-		//OtherVehicle and egocar are on the same lane
-		if(otherVehicle.current_lane.type==this->current_lane.type){
-			if(front && gap < this->current_gap.front){
-				tools.log_number(gap, "this->current_gap.front: ");
-				this->current_gap.front=gap;
-				this->fv_sstate = otherVehicle.sstate;
-			}
-			if(!front && gap < this->current_gap.back){
-				this->current_gap.back = gap;
-			}
+	if (otherVehicle.sstate.p > this->sstate.p){
+		if ((otherVehicle.sstate.p - this->sstate.p) < this->front_gap[otherVehicle.lane]){
+
+			this->front_gap[otherVehicle.lane] = otherVehicle.sstate.p - this->sstate.p;
+			this->front_speed[otherVehicle.lane] = otherVehicle.sstate.v;
 		}
-		else if(otherVehicle.current_lane.type==this->current_lane.left_type){   //otherVehicle is on the left of the egocar
-			if(front && gap < this->left_gap.front){
-				tools.log_number(gap, "this->current_gap.front: ");
-				this->left_gap.front=gap;
-			}
-			if(!front && gap < this->left_gap.back){
-				this->left_gap.back = gap;
-			}
-		}else if(otherVehicle.current_lane.type==this->current_lane.right_type){ //otherVehicle is on the right of the egocar
-			if(front && gap < this->right_gap.front){
-				tools.log_number(gap, "this->current_gap.front: ");
-				this->right_gap.front=gap;
-			}
-			if(!front && gap < this->right_gap.back){
-				this->right_gap.back = gap;
-			}
+	}
+	else{
+
+		if ((this->sstate.p - otherVehicle.sstate.p) < this->back_gap[otherVehicle.lane]){
+			this->back_gap[otherVehicle.lane] = this->sstate.p - otherVehicle.sstate.p;
+		}
+	}
+
+	if(otherVehicle.lane == this->lane){
+		double gap = otherVehicle.sstate.p - this->sstate.p;
+		//check s values greater than mine and s gap
+		if((otherVehicle.sstate.p > this->sstate.p) && ((gap) < 30)){
+				this->close = true;
 		}
 	}
 }
 
 
-double Vehicle::compute_gap(const Vehicle& otherVehicle, const double direction){
-	double gap = 0.0;
-	gap = (otherVehicle.sstate.p - this->sstate.p); //* direction;
-	return gap;
-
-}
-
-void Vehicle::print(){
-	tools.log("---------Car-Report-Start----------");
-	tools.log_number(this->identifier,"Id :");
-	tools.log("Straight Lane :");
-	tools.log_enum(this->current_lane.type);
-	tools.log("Left Lane :");
-	tools.log_enum(this->current_lane.left_type);
-	tools.log("Right Lane :");
-	tools.log_enum(this->current_lane.right_type);
-	tools.log_state(this->sstate,"Start ");
-	tools.log_state(this->dstate, "Start ");
-	tools.log_number(this->current_gap.front, "Current Front Gap ");
-	tools.log_number(this->current_gap.back, "Current Back Gap ");
-	tools.log_number(this->left_gap.front, "Left Front Gap ");
-	tools.log_number(this->left_gap.back, "Left Back Gap ");
-	tools.log_number(this->right_gap.front, "Right Front Gap ");
-	tools.log_number(this->right_gap.back, "Right Back Gap ");
-	//tools.log_number(this->fv_sstate.p-this->sstate.p, "Current Front Gap From calculation: ");
-	tools.log("---------Car-Report-End----------");
-}
 
 Vehicle::~Vehicle() {
 	// TODO Auto-generated destructor stub

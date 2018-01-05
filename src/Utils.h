@@ -41,20 +41,20 @@ const double LEGAL_SPEED_LIMIT = 20.75;
 const double SAFETY_MIN_SPEED = 18; //15.0;
 
 // if the gap is less than this we consider it unsafe to turn
-const double SAFETY_FRONT_GAP_THRESH = 12.0;
+const double SAFETY_FRONT_GAP_THRESH = 20.0;
 const double SAFETY_BACK_GAP_THRESH = 5.0;
 
 // This is the buffers we want against the leading front vehicle
 // for safety so we don't collide with the vehicle right in front of us
-const double SAFETY_FRONT_GAP_BUFFER = SAFETY_FRONT_GAP_THRESH + 5.0;
+const double SAFETY_FRONT_GAP_BUFFER = SAFETY_FRONT_GAP_THRESH + 10.0;
 const double SAFETY_DISTANCE_BUFFER = 5.0;
 const double SAFETY_SPEED_BUFFER =  3.0;
-
+const double SAFETY_MAX_ACC = .224;
 
 // Parameters than can be tweaked which affects the cost of each behavior
 const double FEASABILITY_MIDLANE_REWARD_FACTOR = 1.4; //0.35; //must be 0 < x < 1
-const double FEASABILITY_BACK_GAP_FACTOR = 0.4; // must be less than FRONT_GAP_FACTOR
-const double FEASABILITY_FRONT_GAP_FACTOR = 1.0;
+const double FEASABILITY_BACK_GAP_FACTOR = 20.0; // must be more than FRONT_GAP_FACTOR
+const double FEASABILITY_FRONT_GAP_FACTOR = 10.0;
 const double FEASABILITY_TURN_PENALTY_FACTOR = 0.35; //1.4; // must be x > 1
 
 /*
